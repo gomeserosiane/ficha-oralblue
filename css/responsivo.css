@@ -1,113 +1,158 @@
 @media (max-width: 1100px) {
-    .mini-cards {
-        grid-template-columns: repeat(2, 1fr);
-    }
+  .mini-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 
-    .form-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+  .form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 
-    .mini-date-form {
-        grid-template-columns: repeat(2, 1fr);
-    }
+  .assinatura-box {
+    grid-template-columns: 1fr;
+  }
+
+  .mini-date-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 768px) {
-    .header-image {
-        height: 120px;
-    }
+  body {
+    padding: 12px 8px 32px;
+  }
 
-    .mini-cards,
-    .form-grid,
-    .mini-date-form {
-        grid-template-columns: 1fr;
-    }
+  .container {
+    border-radius: 18px;
+  }
 
-    .span-2,
-    .whatsapp-group {
-        grid-column: span 1;
-    }
+  .header,
+  .section,
+  .footer,
+  .top-actions-bar,
+  .hero {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
 
-    .dependent-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+  .header-image {
+    height: 150px;
+    border-radius: 14px;
+  }
 
-    .submit-area {
-        justify-content: stretch;
-    }
+  .hero {
+    padding-top: 20px;
+  }
 
-    .submit-area .btn {
-        width: 100%;
-    }
+  .hero h1 {
+    font-size: 1.75rem;
+  }
 
-    .assinatura-box {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        gap: 32px;
-        align-items: center;
-    }
+  .plan-card-horizontal,
+  .dependent-header,
+  .modal-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-    .assinatura-form {
-        padding-top: 50px;
-        width: 100%;
-    }
+  .plan-card-horizontal .btn,
+  .submit-stack .btn,
+  .top-actions-bar .btn,
+  .payment-buttons .btn,
+  .modal-actions .btn {
+    width: 100%;
+  }
 
-    .form-group {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+  .mini-cards,
+  .form-grid,
+  .compact-grid,
+  .mini-date-form,
+  .form-grid-assinatura {
+    grid-template-columns: 1fr;
+  }
 
-    .form-group label {
-        width: 90%;
-        text-align: left;
-    }
+  .span-2,
+  .whatsapp-group {
+    grid-column: span 1;
+  }
 
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-        width: 90%;
-    }
+  .form-group {
+    align-items: center;
+  }
 
-    .whatsapp-box {
-        width: 90%;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
+  .form-group label,
+  .choice-field > label {
+    width: 92%;
+    text-align: left;
+  }
 
-    .whatsapp-box span {
-        width: 100%;
-        margin-bottom: 5px;
-        text-align: left;
-    }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 92%;
+  }
 
-    .whatsapp-box label {
-        width: auto;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        margin: 0;
-    }
+  .whatsapp-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
 
-    .whatsapp-box input[type="radio"] {
-        width: auto;
-    }
+  .whatsapp-box {
+    width: 92%;
+    justify-content: flex-start;
+    gap: 10px;
+  }
 
-    .plan-card-horizontal {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+  .whatsapp-box span {
+    width: 100%;
+  }
 
-    .plan-card-horizontal .btn {
-        width: 100%;
-    }
+  .whatsapp-box label,
+  .radio-inline-group label,
+  .checkbox-inline-group label,
+  .choice-group label {
+    width: auto;
+    max-width: 100%;
+  }
 
-    .initial-container .hero h1 {
-        font-size: 24px;
-    }
+  .submit-stack {
+    align-items: stretch;
+  }
+
+  .toast {
+    left: 12px;
+    right: 12px;
+    max-width: none;
+    bottom: 12px;
+  }
+}
+
+@media (max-width: 520px) {
+  .mini-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .choice-group,
+  .radio-inline-group,
+  .checkbox-inline-group,
+  .whatsapp-box {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .choice-group label,
+  .radio-inline-group label,
+  .checkbox-inline-group label,
+  .whatsapp-box label {
+    width: 100%;
+    border-radius: 14px;
+    justify-content: flex-start;
+  }
+
+  .mini-date-form,
+  .form-grid,
+  .compact-grid,
+  .form-grid-assinatura {
+    grid-template-columns: 1fr;
+  }
 }

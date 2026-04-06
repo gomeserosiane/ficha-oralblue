@@ -8,11 +8,8 @@ const openExistingContainerBtn =
 
 const openContainer2Btn = document.getElementById('openContainer2Btn');
 
-const homeButtons =
-  document.querySelectorAll('.go-home-btn, .btn-voltar-inicial');
-
-const switchButtons =
-  document.querySelectorAll('.btn-alternar-formulario');
+const homeButtons = document.querySelectorAll('.go-home-btn, .btn-voltar-inicial');
+const switchButtons = document.querySelectorAll('.btn-alternar-formulario');
 
 const switchToContainer2 = document.getElementById('switchToContainer2');
 const switchToContainer1 = document.getElementById('switchToContainer1');
@@ -48,6 +45,10 @@ function showOnly(target) {
   [initialContainer, container1, container2].forEach((section) => {
     if (!section) return;
     section.hidden = section !== target;
+  });
+
+  requestAnimationFrame(() => {
+    App.refreshSignaturePads();
   });
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -115,6 +116,7 @@ if (cepContratante) {
 
     try {
       const data = await App.fetchViaCep(cep);
+
       if (enderecoCorrespondencia) enderecoCorrespondencia.value = data.logradouro || '';
       if (cidadeContratante) cidadeContratante.value = data.localidade || '';
       if (estadoContratante) estadoContratante.value = data.uf || '';
@@ -204,6 +206,13 @@ function validateContainer2() {
   if (invalidElement) {
     invalidElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     App.showToast('Preencha todos os campos obrigatórios do formulário empresarial antes de enviar.');
+    return false;
+  }
+
+  if (App.signaturePad2 && App.signaturePad2.isEmpty()) {
+    App.signaturePad2.box.classList.add('invalid');
+    App.signaturePad2.box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    App.showToast('Faça a assinatura digital antes de enviar o formulário empresarial.');
     return false;
   }
 

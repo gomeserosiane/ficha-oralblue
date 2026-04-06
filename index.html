@@ -331,9 +331,33 @@
                 </div>
                 -->
 
-                <div class="submit-stack">
-                    <button type="button" id="submitFormBtn" class="btn btn-success">Enviar formulário</button>
-                    <button type="button" id="switchToContainer2" class="btn btn-warning">Alternar formulário ➜</button>
+                <div class="final-actions-row">
+                    <div class="signature-card">
+                        <label class="signature-label" for="signatureCanvas1">Assinatura digital</label>
+
+                        <div class="signature-box" id="signatureBox1">
+                            <canvas id="signatureCanvas1"></canvas>
+                        </div>
+
+                        <button type="button" class="btn btn-secondary signature-clear-btn" data-signature="1">
+                            Limpar assinatura
+                        </button>
+                    </div>
+
+                    <div class="final-buttons-column">
+                        <div class="submit-area">
+                            <button type="button" id="submitFormBtn1" class="btn btn-success">
+                                Enviar formulário
+                            </button>
+                        </div>
+
+                        <div class="submit-area alt-submit-area">
+                            <button type="button" class="btn btn-warning btn-alternar-formulario"
+                                data-current="container1">
+                                Alternar formulário ➜
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <br><br><br>
@@ -570,10 +594,35 @@
                     </div>
                 </div>
 
-                <div class="submit-stack">
-                    <button type="button" class="btn btn-success" id="submitFormBtn2">Enviar formulário</button>
-                    <button type="button" class="btn btn-warning" id="switchToContainer1">Alternar formulário ➜</button>
+                <div class="final-actions-row">
+                    <div class="signature-card">
+                        <label class="signature-label" for="signatureCanvas2">Assinatura digital</label>
+
+                        <div class="signature-box" id="signatureBox2">
+                            <canvas id="signatureCanvas2"></canvas>
+                        </div>
+
+                        <button type="button" class="btn btn-secondary signature-clear-btn" data-signature="2">
+                            Limpar assinatura
+                        </button>
+                    </div>
+
+                    <div class="final-buttons-column">
+                        <div class="submit-area">
+                            <button type="button" class="btn btn-success" id="submitFormBtn2">
+                                Enviar formulário
+                            </button>
+                        </div>
+
+                        <div class="submit-area alt-submit-area">
+                            <button type="button" class="btn btn-warning btn-alternar-formulario"
+                                data-current="container2">
+                                Alternar formulário ➜
+                            </button>
+                        </div>
+                    </div>
                 </div>
+
             </section>
 
             <br><br>

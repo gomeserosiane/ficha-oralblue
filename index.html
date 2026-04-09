@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Formulários Blue Master</title>
+    <title>Formulários | Oral Blue & Mais Blue</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -279,7 +279,17 @@
             </section>
 
             <!-- FORMULÁRIO 2 -->
-            <section class="section repeated-form-section form-copy-target" id="container1Form2Section" data-copy-group="container1">
+            <section class="section plus-blue-section">
+                <div class="plus-blue-card">
+                    <h3>Você deseja aderir o plano Mais Blue ?</h3>
+                    <div class="radio-inline-group choice-group plus-blue-choice-group">
+                        <label><input type="radio" name="maisBlueContainer1" id="maisBlueContainer1Sim" value="sim" /> Sim</label>
+                        <label><input type="radio" name="maisBlueContainer1" id="maisBlueContainer1Nao" value="nao" /> Não</label>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section repeated-form-section form-copy-target plus-blue-form-section" id="container1Form2Section" data-copy-group="container1" hidden>
                 <div class="repeated-form-banner">
                     <img src="img/capa-maisblue-individual.png"
                         alt="Imagem horizontal do segundo formulário" />
@@ -388,13 +398,13 @@
                 </form>
 
                 <section class="section section-nested">
-                    <h1>Identificação dos Dependentes - Formulário 02</h1>
+                    <h1>Identificação dos Dependentes</h1>
                     <button type="button" id="addDependentBtn2" class="btn btn-primary">+ Adicionar dependente</button>
                     <div id="dependentesContainer2" class="dependentes-container"></div>
                 </section>
 
                 <section class="section section-nested" id="paymentSection1Form2">
-                    <h1>Dados de Pagamento - Formulário 02</h1>
+                    <h1>Dados de Pagamento</h1>
                     <h3>Escolha a forma de pagamento:</h3>
                     <div class="payment-buttons">
                         <button type="button" class="payment-toggle btn" data-target="boletoCard2">Boleto</button>
@@ -776,7 +786,18 @@
             </section>
             -->
 
-            <section class="section repeated-form-section" id="container2Form2Section">
+
+            <section class="section plus-blue-section">
+                <div class="plus-blue-card">
+                    <h3>Você deseja aderir o plano Mais Blue ?</h3>
+                    <div class="radio-inline-group choice-group plus-blue-choice-group">
+                        <label><input type="radio" name="maisBlueContainer2" id="maisBlueContainer2Sim" value="sim" /> Sim</label>
+                        <label><input type="radio" name="maisBlueContainer2" id="maisBlueContainer2Nao" value="nao" /> Não</label>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section repeated-form-section plus-blue-form-section" id="container2Form2Section" hidden>
                 <div class="repeated-form-banner">
                     <img src="img/capa-maisblue-empresarial.png" alt="Imagem horizontal do segundo formulário empresarial" />
                 </div>
@@ -849,7 +870,7 @@
                     </div>
                 </form>
 
-                <h1 class="section-subtitle repeated-form-title">Detalhes da Contratação - Formulário 02</h1>
+                <h1 class="section-subtitle repeated-form-title">Detalhes da Contratação</h1>
                 <div class="form-grid compact-grid repeated-form-block">
                     <div class="form-group">
                         <label for="dataAdesao2">Data de adesão</label>
@@ -861,7 +882,7 @@
                     </div>
                 </div>
 
-                <h1 class="section-subtitle repeated-form-title">Contributariedade e Contratação - Formulário 02</h1>
+                <h1 class="section-subtitle repeated-form-title">Contributariedade e Contratação</h1>
                 <div class="double-form-section repeated-form-block">
                     <div class="box-form-card">
                         <h4>Contributariedade</h4>

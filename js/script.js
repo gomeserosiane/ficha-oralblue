@@ -649,6 +649,38 @@ const App = (() => {
     setModalState(copyDataModal, true);
   }
 
+  function schedulePlusBluePrompt(groupKey) {
+    const groupState = alertState[groupKey];
+    if (!groupState) return;
+
+    if (groupState.plusBluePromptTimeout) {
+      clearTimeout(groupState.plusBluePromptTimeout);
+      groupState.plusBluePromptTimeout = null;
+    }
+
+    if (hasShownAlert(groupKey, 'copyPromptClosed')) return;
+    if (!sourceGroupHasData(groupKey)) return;
+
+    groupState.plusBluePromptTimeout = window.setTimeout(() => {
+      groupState.plusBluePromptTimeout = null;
+      if (hasShownAlert(groupKey, 'copyPromptClosed')) return;
+      if (!sourceGroupHasData(groupKey)) return;
+      openCopyPrompt(groupKey);
+    }, 3000);
+  }
+
+  function setupPlusBlueToggle({ groupKey, yesId, sectionId }) {
+    const yesInput = document.getElementById(yesId);
+    const section = document.getElementById(sectionId);
+    if (!yesInput || !section) return;
+
+    yesInput.addEventListener('change', () => {
+      if (!yesInput.checked) return;
+      section.hidden = false;
+      schedulePlusBluePrompt(groupKey);
+    });
+  }
+
 
   const cepInput = document.getElementById('cepTitular');
   const enderecoInput = document.getElementById('enderecoTitular');
@@ -712,23 +744,7 @@ const App = (() => {
     });
   }
 
-  const container1Form2Section = document.getElementById('container1Form2Section');
-  if (container1Form2Section && 'IntersectionObserver' in window) {
-    const container1CopyObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        if (hasShownAlert('container1', 'copyPromptClosed')) {
-          observer.unobserve(entry.target);
-          return;
-        }
-        if (!sourceGroupHasData('container1')) return;
-        openCopyPrompt('container1');
-        observer.unobserve(entry.target);
-      });
-    }, { threshold: 0.35 });
-
-    container1CopyObserver.observe(container1Form2Section);
-  }
+  setupPlusBlueToggle({ groupKey: 'container1', yesId: 'maisBlueContainer1Sim', sectionId: 'container1Form2Section' });
 
   function getActivePaymentPanel() {
     return paymentController1.getActivePanel();
@@ -841,6 +857,7 @@ const App = (() => {
     sourceGroupHasData,
     copyFormGroup,
     openCopyPrompt,
+    setupPlusBlueToggle,
     closeCopyDataModal,
     signaturePad1,
     signaturePad2,

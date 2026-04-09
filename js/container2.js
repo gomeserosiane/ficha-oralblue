@@ -156,22 +156,7 @@ if (cepContratante2) {
   });
 }
 
-if (container2Form2Section && 'IntersectionObserver' in window) {
-  const container2CopyObserver = new IntersectionObserver((entries, observer) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      if (App.hasShownAlert('container2', 'copyPromptClosed')) {
-        observer.unobserve(entry.target);
-        return;
-      }
-      if (!App.sourceGroupHasData('container2')) return;
-      App.openCopyPrompt('container2');
-      observer.unobserve(entry.target);
-    });
-  }, { threshold: 0.35 });
-
-  container2CopyObserver.observe(container2Form2Section);
-}
+App.setupPlusBlueToggle({ groupKey: 'container2', yesId: 'maisBlueContainer2Sim', sectionId: 'container2Form2Section' });
 
 if (enderecoFaturamento) {
   enderecoFaturamento.addEventListener('focus', () => {

@@ -35,6 +35,36 @@ const App = (() => {
     document.body.classList.toggle('modal-open', isActive);
   }
 
+  function bindResponsivePress(element, handler) {
+    if (!element || typeof handler !== 'function') return;
+
+    let lastTouchTime = 0;
+
+    const runHandler = (event) => {
+      handler(event);
+    };
+
+    if ('PointerEvent' in window) {
+      element.addEventListener('pointerup', (event) => {
+        if (event.pointerType === 'mouse') return;
+        lastTouchTime = Date.now();
+        if (event.cancelable) event.preventDefault();
+        runHandler(event);
+      });
+    } else {
+      element.addEventListener('touchend', (event) => {
+        lastTouchTime = Date.now();
+        if (event.cancelable) event.preventDefault();
+        runHandler(event);
+      }, { passive: false });
+    }
+
+    element.addEventListener('click', (event) => {
+      if (Date.now() - lastTouchTime < 500) return;
+      runHandler(event);
+    });
+  }
+
   function openLocationModal(targetKey) {
     activeDateTarget = targetKey;
     setModalState(locationModal, true);
@@ -402,7 +432,7 @@ const App = (() => {
   }
 
   document.querySelectorAll('.signature-clear-btn').forEach((button) => {
-    button.addEventListener('click', () => {
+    bindResponsivePress(button, () => {
       const target = button.dataset.signature;
       if (target === '1' && signaturePad1) signaturePad1.clear();
       if (target === '2' && signaturePad2) signaturePad2.clear();
@@ -410,7 +440,7 @@ const App = (() => {
   });
 
   if (confirmLocationBtn) {
-    confirmLocationBtn.addEventListener('click', async () => {
+    bindResponsivePress(confirmLocationBtn, async () => {
       const payload = await getCurrentPlaceAndDate();
       fillDateFields(activeDateTarget, payload);
       closeLocationModal();
@@ -419,7 +449,7 @@ const App = (() => {
   }
 
   if (cancelLocationBtn) {
-    cancelLocationBtn.addEventListener('click', closeLocationModal);
+    bindResponsivePress(cancelLocationBtn, closeLocationModal);
   }
 
   function sourceGroupHasData(groupKey) {
@@ -489,7 +519,7 @@ const App = (() => {
 
     const buttons = scopeElement.querySelectorAll('.payment-toggle');
     buttons.forEach((button) => {
-      button.addEventListener('click', () => {
+      bindResponsivePress(button, () => {
         const targetId = button.dataset.target;
         const targetCard = scopeElement.querySelector(`#${targetId}`);
         if (!targetCard) return;
@@ -548,15 +578,27 @@ const App = (() => {
       return appendedCard;
     }
 
-    if (button) button.addEventListener('click', () => addDependent());
+    if (button) bindResponsivePress(button, () => addDependent());
 
     if (container) {
-      container.addEventListener('click', (event) => {
-        if (event.target.classList.contains('remove-dependent-btn')) {
-          event.target.closest('.dependent-card')?.remove();
-          updateTitles();
-        }
-      });
+      const handleRemoveDependent = (event) => {
+        const removeButton = event.target.closest('.remove-dependent-btn');
+        if (!removeButton) return;
+        if (event.cancelable) event.preventDefault();
+        removeButton.closest('.dependent-card')?.remove();
+        updateTitles();
+      };
+
+      if ('PointerEvent' in window) {
+        container.addEventListener('pointerup', (event) => {
+          if (event.pointerType === 'mouse') return;
+          handleRemoveDependent(event);
+        });
+      } else {
+        container.addEventListener('touchend', handleRemoveDependent, { passive: false });
+      }
+
+      container.addEventListener('click', handleRemoveDependent);
     }
 
     return {
@@ -711,7 +753,7 @@ const App = (() => {
   const enderecoInput = document.getElementById('enderecoTitular');
   const bairroInput = document.getElementById('bairroTitular');
   const complementoInput = document.getElementById('complementoTitular');
-  const submitFormBtn = document.getElementById('submitFormBtn') || document.getElementById('submitFormBtn1');
+  const submitFormBtns = Array.from(document.querySelectorAll('#submitFormBtn, #submitFormBtn1, .submit-form-btn'));
   const container1 = document.getElementById('container1');
   const dependentManagers = {
     primary: setupDependentSection({ buttonId: 'addDependentBtn', containerId: 'dependentesContainer' }),
@@ -829,8 +871,9 @@ const App = (() => {
     return true;
   }
 
-  if (submitFormBtn) {
-    submitFormBtn.addEventListener('click', async () => {
+  submitFormBtns.forEach((button) => {
+    bindResponsivePress(button, async (event) => {
+      if (event?.cancelable) event.preventDefault();
       if (!validateContainer1()) return;
       try {
         await captureContainer(container1, 'formulario-individual-preenchido.png');
@@ -839,10 +882,10 @@ const App = (() => {
         showToast('Não foi possível gerar o print do formulário.');
       }
     });
-  }
+  });
 
   if (confirmCopyDataBtn) {
-    confirmCopyDataBtn.addEventListener('click', () => {
+    bindResponsivePress(confirmCopyDataBtn, () => {
       const groupKey = copyDataModal?.dataset.group;
       if (!groupKey) return;
       copyFormGroup(groupKey);
@@ -853,7 +896,7 @@ const App = (() => {
   }
 
   if (cancelCopyDataBtn) {
-    cancelCopyDataBtn.addEventListener('click', () => {
+    bindResponsivePress(cancelCopyDataBtn, () => {
       const groupKey = copyDataModal?.dataset.group;
       if (groupKey) markAlertShown(groupKey, 'copyPromptClosed');
       closeCopyDataModal();
@@ -884,6 +927,7 @@ const App = (() => {
     openCopyPrompt,
     setupPlusBlueToggle,
     closeCopyDataModal,
+    bindResponsivePress,
     signaturePad1,
     signaturePad2,
     refreshSignaturePads

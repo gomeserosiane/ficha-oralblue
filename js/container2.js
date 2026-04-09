@@ -29,6 +29,10 @@ const complementoContratante = document.getElementById('complementoContratante')
 
 function bindPress(element, handler) {
   if (!element || typeof handler !== 'function') return;
+  if (typeof App?.bindResponsivePress === 'function') {
+    App.bindResponsivePress(element, handler);
+    return;
+  }
 
   let touchTriggered = false;
 
@@ -42,7 +46,7 @@ function bindPress(element, handler) {
 
   element.addEventListener('touchend', (event) => {
     touchTriggered = true;
-    event.preventDefault();
+    if (event.cancelable) event.preventDefault();
     handler(event);
   }, { passive: false });
 }
@@ -204,7 +208,7 @@ if (enderecoFaturamento) {
 }
 
 if (confirmBillingBtn) {
-  confirmBillingBtn.addEventListener('click', () => {
+  bindPress(confirmBillingBtn, () => {
     if (enderecoFaturamento && enderecoCorrespondencia) {
       enderecoFaturamento.value = enderecoCorrespondencia.value;
     }
@@ -215,7 +219,7 @@ if (confirmBillingBtn) {
 }
 
 if (cancelBillingBtn) {
-  cancelBillingBtn.addEventListener('click', () => {
+  bindPress(cancelBillingBtn, () => {
     closeBillingModal();
   });
 }
@@ -284,7 +288,8 @@ function validateContainer2() {
 }
 
 if (submitFormBtn2) {
-  submitFormBtn2.addEventListener('click', async () => {
+  bindPress(submitFormBtn2, async (event) => {
+    if (event?.cancelable) event.preventDefault();
     if (!validateContainer2()) return;
 
     try {

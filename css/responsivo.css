@@ -161,6 +161,14 @@
     width: 100%;
     max-width: 250px;
   }
+
+  .repeated-form-banner {
+    height: 150px;
+  }
+
+  .repeated-form-banner img {
+    height: 150px;
+  }
 }
 
 @media (max-width: 520px) {

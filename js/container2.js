@@ -108,6 +108,10 @@ App.addMask(document.getElementById('cepContratante'), App.formatters.cep);
 App.addMask(document.getElementById('cnpjMf'), App.formatters.cnpj);
 App.addMask(document.getElementById('telefoneContratante'), App.formatters.phone);
 App.addMask(document.getElementById('celularContratante'), App.formatters.phone);
+App.addMask(document.getElementById('cepContratante2'), App.formatters.cep);
+App.addMask(document.getElementById('cnpjMf2'), App.formatters.cnpj);
+App.addMask(document.getElementById('telefoneContratante2'), App.formatters.phone);
+App.addMask(document.getElementById('celularContratante2'), App.formatters.phone);
 
 if (cepContratante) {
   cepContratante.addEventListener('blur', async () => {
@@ -125,6 +129,48 @@ if (cepContratante) {
       App.showToast('Não foi possível localizar o CEP da contratante.');
     }
   });
+}
+
+const enderecoCorrespondencia2 = document.getElementById('enderecoCorrespondencia2');
+const cepContratante2 = document.getElementById('cepContratante2');
+const cidadeContratante2 = document.getElementById('cidadeContratante2');
+const estadoContratante2 = document.getElementById('estadoContratante2');
+const complementoContratante2 = document.getElementById('complementoContratante2');
+const container2Form2Section = document.getElementById('container2Form2Section');
+
+if (cepContratante2) {
+  cepContratante2.addEventListener('blur', async () => {
+    const cep = App.numeric(cepContratante2.value);
+    if (cep.length !== 8) return;
+
+    try {
+      const data = await App.fetchViaCep(cep);
+
+      if (enderecoCorrespondencia2) enderecoCorrespondencia2.value = data.logradouro || '';
+      if (cidadeContratante2) cidadeContratante2.value = data.localidade || '';
+      if (estadoContratante2) estadoContratante2.value = data.uf || '';
+      if (complementoContratante2) complementoContratante2.value = data.complemento || '';
+    } catch (error) {
+      App.showToast('Não foi possível localizar o CEP da contratante no segundo formulário.');
+    }
+  });
+}
+
+if (container2Form2Section && 'IntersectionObserver' in window) {
+  const container2CopyObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      if (App.hasShownAlert('container2', 'copyPromptClosed')) {
+        observer.unobserve(entry.target);
+        return;
+      }
+      if (!App.sourceGroupHasData('container2')) return;
+      App.openCopyPrompt('container2');
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.35 });
+
+  container2CopyObserver.observe(container2Form2Section);
 }
 
 if (enderecoFaturamento) {

@@ -3,13 +3,16 @@ const App = (() => {
   const locationModal = document.getElementById('locationModal');
   const confirmLocationBtn = document.getElementById('confirmLocationBtn');
   const cancelLocationBtn = document.getElementById('cancelLocationBtn');
+  const copyDataModal = document.getElementById('copyDataModal');
+  const confirmCopyDataBtn = document.getElementById('confirmCopyDataBtn');
+  const cancelCopyDataBtn = document.getElementById('cancelCopyDataBtn');
 
   let activeDateTarget = null;
   let toastTimer = null;
 
   let alertState = {
-    container1: { locationShown: false },
-    container2: { locationShown: false, billingShown: false }
+    container1: { locationShown: false, copyPromptClosed: false },
+    container2: { locationShown: false, billingShown: false, copyPromptClosed: false }
   };
 
   const cityByState = (address = {}) => (
@@ -42,8 +45,13 @@ const App = (() => {
     setModalState(locationModal, false);
   }
 
+  function closeCopyDataModal() {
+    setModalState(copyDataModal, false);
+  }
+
   function closeAllKnownModals() {
     closeLocationModal();
+    closeCopyDataModal();
     const billingModal = document.getElementById('billingModal');
     if (billingModal) setModalState(billingModal, false);
   }
@@ -59,8 +67,8 @@ const App = (() => {
       return;
     }
     alertState = {
-      container1: { locationShown: false },
-      container2: { locationShown: false, billingShown: false }
+      container1: { locationShown: false, copyPromptClosed: alertState.container1.copyPromptClosed },
+      container2: { locationShown: false, billingShown: false, copyPromptClosed: alertState.container2.copyPromptClosed }
     };
   }
 
@@ -414,42 +422,246 @@ const App = (() => {
     cancelLocationBtn.addEventListener('click', closeLocationModal);
   }
 
-  const addDependentBtn = document.getElementById('addDependentBtn');
-  const dependentesContainer = document.getElementById('dependentesContainer');
+  function sourceGroupHasData(groupKey) {
+    const targetForm = document.querySelector(`.form-copy-target[data-copy-group="${groupKey}"]`);
+    if (!targetForm) return false;
+
+    const sourceIds = new Set();
+    const sourceRadioNames = new Set();
+
+    targetForm.querySelectorAll('[data-copy-from]').forEach((field) => {
+      const source = field.dataset.copyFrom;
+      if (!source) return;
+      if (field.type === 'radio' || field.type === 'checkbox') {
+        sourceRadioNames.add(source);
+      } else {
+        sourceIds.add(source);
+      }
+    });
+
+    for (const id of sourceIds) {
+      const sourceField = document.getElementById(id);
+      if (sourceField && isFilled(sourceField.value)) return true;
+    }
+
+    for (const name of sourceRadioNames) {
+      if (document.querySelector(`input[name="${name}"]:checked`)) return true;
+    }
+
+    if (groupKey === 'container1') {
+      const sourceDependentCards = Array.from(document.querySelectorAll('#dependentesContainer .dependent-card'));
+      if (sourceDependentCards.some((card) => Array.from(card.querySelectorAll('input, select, textarea')).some((field) => {
+        if (field.type === 'radio' || field.type === 'checkbox') return field.checked;
+        return isFilled(field.value);
+      }))) {
+        return true;
+      }
+
+      if (document.querySelector('#paymentSection1 .payment-toggle.active')) return true;
+    }
+
+    return false;
+  }
+
+  function setPaymentSelection(scopeElement, targetId = null) {
+    if (!scopeElement) return;
+    const buttons = Array.from(scopeElement.querySelectorAll('.payment-toggle'));
+    const cards = Array.from(scopeElement.querySelectorAll('.payment-card'));
+    buttons.forEach((btn) => btn.classList.remove('active'));
+    cards.forEach((card) => card.classList.remove('active'));
+    if (!targetId) return;
+
+    const button = buttons.find((btn) => btn.dataset.target === targetId);
+    const card = cards.find((item) => item.id === targetId);
+    if (button) button.classList.add('active');
+    if (card) card.classList.add('active');
+  }
+
+  function setupPaymentToggle(scopeSelector) {
+    const scopeElement = document.querySelector(scopeSelector);
+    if (!scopeElement) {
+      return {
+        scopeElement: null,
+        getActivePanel: () => null,
+        setActiveById: () => {}
+      };
+    }
+
+    const buttons = scopeElement.querySelectorAll('.payment-toggle');
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const targetId = button.dataset.target;
+        const targetCard = scopeElement.querySelector(`#${targetId}`);
+        if (!targetCard) return;
+        const alreadyActive = targetCard.classList.contains('active');
+        setPaymentSelection(scopeElement, alreadyActive ? null : targetId);
+      });
+    });
+
+    return {
+      scopeElement,
+      getActivePanel: () => Array.from(scopeElement.querySelectorAll('.payment-card')).find((card) => card.classList.contains('active')) || null,
+      setActiveById: (targetId) => setPaymentSelection(scopeElement, targetId)
+    };
+  }
+
   const dependentTemplate = document.getElementById('dependentTemplate');
+  const dependentFieldBindings = [
+    ['.dep-cpf', formatters.cpf],
+    ['.dep-celular', formatters.phone]
+  ];
+
+  function enhanceDependentCard(card) {
+    if (!card) return;
+    dependentFieldBindings.forEach(([selector, formatter]) => {
+      addMask(card.querySelector(selector), formatter);
+    });
+  }
+
+  function setupDependentSection({ buttonId, containerId }) {
+    const button = document.getElementById(buttonId);
+    const container = document.getElementById(containerId);
+
+    function updateTitles() {
+      if (!container) return;
+      container.querySelectorAll('.dependent-card').forEach((card, index) => {
+        const title = card.querySelector('.dependent-title');
+        if (title) title.textContent = `Dependente ${String(index + 1).padStart(2, '0')}`;
+      });
+    }
+
+    function addDependent(prefill = null) {
+      if (!dependentTemplate || !container) return null;
+      const fragment = dependentTemplate.content.cloneNode(true);
+      const card = fragment.querySelector('.dependent-card');
+      if (!card) return null;
+      container.appendChild(fragment);
+      const appendedCard = container.lastElementChild;
+      enhanceDependentCard(appendedCard);
+      if (prefill) {
+        Object.entries(prefill).forEach(([selector, value]) => {
+          const field = appendedCard.querySelector(selector);
+          if (field) field.value = value || '';
+        });
+      }
+      updateTitles();
+      return appendedCard;
+    }
+
+    if (button) button.addEventListener('click', () => addDependent());
+
+    if (container) {
+      container.addEventListener('click', (event) => {
+        if (event.target.classList.contains('remove-dependent-btn')) {
+          event.target.closest('.dependent-card')?.remove();
+          updateTitles();
+        }
+      });
+    }
+
+    return {
+      button,
+      container,
+      addDependent,
+      updateTitles,
+      clear() {
+        if (!container) return;
+        container.innerHTML = '';
+      },
+      getCards() {
+        return container ? Array.from(container.querySelectorAll('.dependent-card')) : [];
+      }
+    };
+  }
+
+  function getDependentSnapshot(card) {
+    return {
+      '.dep-nome': card.querySelector('.dep-nome')?.value || '',
+      '.dep-data-nascimento': card.querySelector('.dep-data-nascimento')?.value || '',
+      '.dep-nome-mae': card.querySelector('.dep-nome-mae')?.value || '',
+      '.dep-cpf': card.querySelector('.dep-cpf')?.value || '',
+      '.dep-sexo': card.querySelector('.dep-sexo')?.value || '',
+      '.dep-parentesco': card.querySelector('.dep-parentesco')?.value || '',
+      '.dep-cns': card.querySelector('.dep-cns')?.value || '',
+      '.dep-celular': card.querySelector('.dep-celular')?.value || '',
+      '.dep-email': card.querySelector('.dep-email')?.value || ''
+    };
+  }
+
+  function syncContainer1Dependents() {
+    const sourceManager = dependentManagers.primary;
+    const targetManager = dependentManagers.secondary;
+    if (!sourceManager?.container || !targetManager?.container) return;
+
+    targetManager.clear();
+    sourceManager.getCards().forEach((card) => {
+      targetManager.addDependent(getDependentSnapshot(card));
+    });
+    targetManager.updateTitles();
+  }
+
+  function syncContainer1Payment() {
+    const activeSourcePanel = paymentController1.getActivePanel();
+    if (!activeSourcePanel) {
+      paymentController2.setActiveById(null);
+      return;
+    }
+    paymentController2.setActiveById(`${activeSourcePanel.id}2`);
+  }
+
+  function copyFormGroup(groupKey) {
+    const targetForm = document.querySelector(`.form-copy-target[data-copy-group="${groupKey}"]`);
+    if (!targetForm) return false;
+
+    targetForm.querySelectorAll('[data-copy-from]').forEach((field) => {
+      const source = field.dataset.copyFrom;
+      if (!source) return;
+
+      if (field.type === 'radio') {
+        const selected = document.querySelector(`input[name="${source}"]:checked`);
+        field.checked = Boolean(selected && selected.value === field.value);
+        return;
+      }
+
+      if (field.type === 'checkbox') {
+        const checkedValues = Array.from(document.querySelectorAll(`input[name="${source}"]:checked`)).map((input) => input.value);
+        field.checked = checkedValues.includes(field.value);
+        return;
+      }
+
+      const sourceField = document.getElementById(source);
+      if (sourceField) {
+        field.value = sourceField.value || '';
+      }
+    });
+
+    if (groupKey === 'container1') {
+      syncContainer1Dependents();
+      syncContainer1Payment();
+    }
+
+    return true;
+  }
+
+  function openCopyPrompt(groupKey) {
+    if (!copyDataModal) return;
+    copyDataModal.dataset.group = groupKey;
+    setModalState(copyDataModal, true);
+  }
+
+
   const cepInput = document.getElementById('cepTitular');
   const enderecoInput = document.getElementById('enderecoTitular');
   const bairroInput = document.getElementById('bairroTitular');
   const complementoInput = document.getElementById('complementoTitular');
-  const paymentButtons = document.querySelectorAll('#container1 .payment-toggle');
-  const paymentCards = document.querySelectorAll('#container1 .payment-card');
   const submitFormBtn = document.getElementById('submitFormBtn') || document.getElementById('submitFormBtn1');
   const container1 = document.getElementById('container1');
-
-  function updateDependentsTitles() {
-    if (!dependentesContainer) return;
-    dependentesContainer.querySelectorAll('.dependent-card').forEach((card, index) => {
-      const title = card.querySelector('.dependent-title');
-      if (title) title.textContent = `Dependente ${String(index + 1).padStart(2, '0')}`;
-    });
-  }
-
-  function addDependent() {
-    if (!dependentTemplate || !dependentesContainer) return;
-    dependentesContainer.appendChild(dependentTemplate.content.cloneNode(true));
-    updateDependentsTitles();
-  }
-
-  if (addDependentBtn) addDependentBtn.addEventListener('click', addDependent);
-
-  if (dependentesContainer) {
-    dependentesContainer.addEventListener('click', (event) => {
-      if (event.target.classList.contains('remove-dependent-btn')) {
-        event.target.closest('.dependent-card')?.remove();
-        updateDependentsTitles();
-      }
-    });
-  }
+  const dependentManagers = {
+    primary: setupDependentSection({ buttonId: 'addDependentBtn', containerId: 'dependentesContainer' }),
+    secondary: setupDependentSection({ buttonId: 'addDependentBtn2', containerId: 'dependentesContainer2' })
+  };
+  const paymentController1 = setupPaymentToggle('#paymentSection1');
+  const paymentController2 = setupPaymentToggle('#paymentSection1Form2');
 
   if (cepInput) {
     addMask(cepInput, formatters.cep);
@@ -467,21 +679,6 @@ const App = (() => {
     });
   }
 
-  paymentButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-      const targetId = button.dataset.target;
-      const targetCard = document.getElementById(targetId);
-      if (!targetCard) return;
-      const alreadyActive = targetCard.classList.contains('active');
-      paymentButtons.forEach((btn) => btn.classList.remove('active'));
-      paymentCards.forEach((card) => card.classList.remove('active'));
-      if (!alreadyActive) {
-        button.classList.add('active');
-        targetCard.classList.add('active');
-      }
-    });
-  });
-
   document.querySelectorAll('.auto-date-trigger').forEach((input) => {
     input.addEventListener('focus', () => {
       if (!hasShownAlert('container1', 'locationShown')) {
@@ -491,12 +688,50 @@ const App = (() => {
     });
   });
 
-  [['cpfTitular', formatters.cpf], ['telefoneTitular', formatters.phone], ['celularTitular', formatters.phone]].forEach(([id, formatter]) => {
+  [['cpfTitular', formatters.cpf], ['telefoneTitular', formatters.phone], ['celularTitular', formatters.phone], ['cpfTitular2', formatters.cpf], ['telefoneTitular2', formatters.phone], ['celularTitular2', formatters.phone], ['cepTitular2', formatters.cep]].forEach(([id, formatter]) => {
     addMask(document.getElementById(id), formatter);
   });
 
+  const cepInput2 = document.getElementById('cepTitular2');
+  const enderecoInput2 = document.getElementById('enderecoTitular2');
+  const bairroInput2 = document.getElementById('bairroTitular2');
+  const complementoInput2 = document.getElementById('complementoTitular2');
+
+  if (cepInput2) {
+    cepInput2.addEventListener('blur', async () => {
+      const cep = numeric(cepInput2.value);
+      if (cep.length !== 8) return;
+      try {
+        const data = await fetchViaCep(cep);
+        if (enderecoInput2) enderecoInput2.value = data.logradouro || '';
+        if (bairroInput2) bairroInput2.value = data.bairro || '';
+        if (complementoInput2) complementoInput2.value = data.complemento || '';
+      } catch (error) {
+        showToast('Não foi possível localizar o CEP informado no segundo formulário.');
+      }
+    });
+  }
+
+  const container1Form2Section = document.getElementById('container1Form2Section');
+  if (container1Form2Section && 'IntersectionObserver' in window) {
+    const container1CopyObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        if (hasShownAlert('container1', 'copyPromptClosed')) {
+          observer.unobserve(entry.target);
+          return;
+        }
+        if (!sourceGroupHasData('container1')) return;
+        openCopyPrompt('container1');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.35 });
+
+    container1CopyObserver.observe(container1Form2Section);
+  }
+
   function getActivePaymentPanel() {
-    return Array.from(paymentCards).find((card) => card.classList.contains('active')) || null;
+    return paymentController1.getActivePanel();
   }
 
   function validateContainer1() {
@@ -565,6 +800,25 @@ const App = (() => {
     });
   }
 
+  if (confirmCopyDataBtn) {
+    confirmCopyDataBtn.addEventListener('click', () => {
+      const groupKey = copyDataModal?.dataset.group;
+      if (!groupKey) return;
+      copyFormGroup(groupKey);
+      markAlertShown(groupKey, 'copyPromptClosed');
+      closeCopyDataModal();
+      showToast('Os dados do primeiro formulário foram reaproveitados no novo formulário.', 'success');
+    });
+  }
+
+  if (cancelCopyDataBtn) {
+    cancelCopyDataBtn.addEventListener('click', () => {
+      const groupKey = copyDataModal?.dataset.group;
+      if (groupKey) markAlertShown(groupKey, 'copyPromptClosed');
+      closeCopyDataModal();
+    });
+  }
+
   return {
     showToast,
     setModalState,
@@ -584,6 +838,10 @@ const App = (() => {
     resetAlerts,
     hasShownAlert,
     markAlertShown,
+    sourceGroupHasData,
+    copyFormGroup,
+    openCopyPrompt,
+    closeCopyDataModal,
     signaturePad1,
     signaturePad2,
     refreshSignaturePads

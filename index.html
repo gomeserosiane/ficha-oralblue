@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/container2.css">
+    <link rel="stylesheet" href="css/novos-formularios.css">
     <link rel="stylesheet" href="css/responsivo.css">
 </head>
 
@@ -63,7 +64,7 @@
             </footer>
         </div>
 
-        <!-- CONTAINER 1 -->
+        <!-- CONTAINER 1 (FORMULÁRIO 1)-->
         <div class="container form-container" id="container1" hidden>
             <div class="top-actions-bar">
                 <button type="button" class="btn btn-secondary go-home-btn" data-home="true">⮌ Voltar à tela
@@ -71,7 +72,7 @@
             </div>
 
             <header class="header">
-                <img class="header-image" src="img/capa-1.png" alt="Imagem horizontal do header" />
+                <img class="header-image" src="img/capa-oralblue-individual.png" alt="Imagem horizontal do header" />
 
                 <div class="mini-cards">
                     <div class="mini-card">
@@ -186,7 +187,7 @@
                 <div id="dependentesContainer" class="dependentes-container"></div>
             </section>
 
-            <section class="section">
+            <section class="section" id="paymentSection1">
                 <h1>Dados de Pagamento</h1>
                 <h3>Escolha a forma de pagamento:</h3>
                 <div class="payment-buttons">
@@ -275,6 +276,212 @@
                         </div>
                     </div>
                 </div>
+            </section>
+
+            <!-- FORMULÁRIO 2 -->
+            <section class="section repeated-form-section form-copy-target" id="container1Form2Section" data-copy-group="container1">
+                <div class="repeated-form-banner">
+                    <img src="img/capa-maisblue-individual.png"
+                        alt="Imagem horizontal do segundo formulário" />
+                </div>
+
+                <h1>Dados do Titular</h1>
+
+                <form id="titularForm2" class="form-grid">
+                    <div class="form-group span-2">
+                        <label for="nomeTitular2">Nome</label>
+                        <input type="text" id="nomeTitular2" data-copy-from="nomeTitular" />
+                    </div>
+
+                    <div class="form-group span-2">
+                        <label for="nomeMaeTitular2">Nome da mãe</label>
+                        <input type="text" id="nomeMaeTitular2" data-copy-from="nomeMaeTitular" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dataNascimentoTitular2">Data de nascimento</label>
+                        <input type="date" id="dataNascimentoTitular2" data-copy-from="dataNascimentoTitular" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profissaoTitular2">Profissão</label>
+                        <input type="text" id="profissaoTitular2" data-copy-from="profissaoTitular" />
+                    </div>
+
+                    <div class="form-group span-2">
+                        <label for="localTrabalhoTitular2">Local de trabalho</label>
+                        <input type="text" id="localTrabalhoTitular2" data-copy-from="localTrabalhoTitular" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="matriculaTitular2">Matrícula</label>
+                        <input type="text" id="matriculaTitular2" data-copy-from="matriculaTitular" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rgTitular2">RG</label>
+                        <input type="text" id="rgTitular2" data-copy-from="rgTitular" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="orgaoEmissorTitular2">Órgão emissor</label>
+                        <input type="text" id="orgaoEmissorTitular2" data-copy-from="orgaoEmissorTitular" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cpfTitular2">CPF</label>
+                        <input type="text" id="cpfTitular2" data-copy-from="cpfTitular" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cnsTitular2">CNS</label>
+                        <input type="text" id="cnsTitular2" data-copy-from="cnsTitular" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefoneTitular2">Telefone</label>
+                        <input type="text" id="telefoneTitular2" data-copy-from="telefoneTitular" />
+                    </div>
+
+                    <div class="form-group whatsapp-group">
+                        <label for="celularTitular2">Celular</label>
+                        <input type="text" id="celularTitular2" data-copy-from="celularTitular" />
+
+                        <div class="whatsapp-box">
+                            <span>É WhatsApp?</span>
+                            <label><input type="radio" name="whatsapp2" value="sim" data-copy-from="whatsapp" />
+                                Sim</label>
+                            <label><input type="radio" name="whatsapp2" value="nao" data-copy-from="whatsapp" />
+                                Não</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group span-2">
+                        <label for="emailTitular2">E-mail</label>
+                        <input type="email" id="emailTitular2" data-copy-from="emailTitular" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cepTitular2">CEP</label>
+                        <input type="text" id="cepTitular2" maxlength="9" data-copy-from="cepTitular" />
+                    </div>
+
+                    <div class="form-group span-2">
+                        <label for="enderecoTitular2">Endereço</label>
+                        <input type="text" id="enderecoTitular2" data-copy-from="enderecoTitular" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="numeroTitular2">N°</label>
+                        <input type="text" id="numeroTitular2" data-copy-from="numeroTitular" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bairroTitular2">Bairro</label>
+                        <input type="text" id="bairroTitular2" data-copy-from="bairroTitular" />
+                    </div>
+
+                    <div class="form-group span-2">
+                        <label for="complementoTitular2">Complemento</label>
+                        <input type="text" id="complementoTitular2" data-copy-from="complementoTitular" />
+                    </div>
+                </form>
+
+                <section class="section section-nested">
+                    <h1>Identificação dos Dependentes - Formulário 02</h1>
+                    <button type="button" id="addDependentBtn2" class="btn btn-primary">+ Adicionar dependente</button>
+                    <div id="dependentesContainer2" class="dependentes-container"></div>
+                </section>
+
+                <section class="section section-nested" id="paymentSection1Form2">
+                    <h1>Dados de Pagamento - Formulário 02</h1>
+                    <h3>Escolha a forma de pagamento:</h3>
+                    <div class="payment-buttons">
+                        <button type="button" class="payment-toggle btn" data-target="boletoCard2">Boleto</button>
+                        <button type="button" class="payment-toggle btn" data-target="cartaoCard2">Cartão (crédito)</button>
+                        <button type="button" class="payment-toggle btn" data-target="debitoCard2">Débito em conta</button>
+                        <button type="button" class="payment-toggle btn" data-target="folhaCard2">Desconto na folha</button>
+                    </div>
+
+                    <div class="payment-panels">
+                        <div class="payment-card" id="boletoCard2">
+                            <h4>Escolha o vencimento do boleto:</h4>
+                            <div class="radio-inline-group choice-group">
+                                <label><input type="radio" name="vencimentoBoleto2" value="05" data-copy-from="vencimentoBoleto" /> 05</label>
+                                <label><input type="radio" name="vencimentoBoleto2" value="10" data-copy-from="vencimentoBoleto" /> 10</label>
+                                <label><input type="radio" name="vencimentoBoleto2" value="15" data-copy-from="vencimentoBoleto" /> 15</label>
+                                <label><input type="radio" name="vencimentoBoleto2" value="20" data-copy-from="vencimentoBoleto" /> 20</label>
+                                <label><input type="radio" name="vencimentoBoleto2" value="25" data-copy-from="vencimentoBoleto" /> 25</label>
+                            </div>
+                        </div>
+
+                        <div class="payment-card" id="cartaoCard2">
+                            <h4>Dados do Cartão de Crédito</h4>
+                            <div class="form-grid compact-grid">
+                                <div class="form-group span-2">
+                                    <label for="nomeCartao2">Nome impresso no cartão:</label>
+                                    <input type="text" id="nomeCartao2" data-copy-from="nomeCartao" />
+                                </div>
+                                <div class="form-group span-2">
+                                    <label for="numeroCartao2">Número do cartão:</label>
+                                    <input type="text" id="numeroCartao2" data-copy-from="numeroCartao" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="validadeCartao2">Validade:</label>
+                                    <input type="month" id="validadeCartao2" data-copy-from="validadeCartao" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="cvvCartao2">CVV:</label>
+                                    <input type="text" id="cvvCartao2" maxlength="4" data-copy-from="cvvCartao" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="payment-card" id="debitoCard2">
+                            <h4>Dados para Débito em Conta</h4>
+                            <div class="form-grid compact-grid">
+                                <div class="form-group span-2">
+                                    <label for="nomeBanco2">Nome do Banco:</label>
+                                    <input type="text" id="nomeBanco2" data-copy-from="nomeBanco" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="codBanco2">N° COD. Banco:</label>
+                                    <input type="text" id="codBanco2" data-copy-from="codBanco" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="agenciaBanco2">Agência:</label>
+                                    <input type="text" id="agenciaBanco2" data-copy-from="agenciaBanco" />
+                                </div>
+                                <div class="form-group span-2">
+                                    <label for="contaCorrente2">N° Conta corrente:</label>
+                                    <input type="text" id="contaCorrente2" data-copy-from="contaCorrente" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="payment-card" id="folhaCard2">
+                            <h4>Dados para Desconto na Folha</h4>
+                            <div class="form-grid compact-grid">
+                                <div class="form-group">
+                                    <label for="matriculaFolha2">N° matrícula:</label>
+                                    <input type="text" id="matriculaFolha2" data-copy-from="matriculaFolha" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="orgaoFolha2">Órgão:</label>
+                                    <input type="text" id="orgaoFolha2" data-copy-from="orgaoFolha" />
+                                </div>
+                                <div class="form-group span-2">
+                                    <label>Tipo de órgão:</label>
+                                    <div class="checkbox-inline-group choice-group">
+                                        <label><input type="checkbox" name="tipoOrgao2" value="Federal" data-copy-from="tipoOrgao" /> Federal</label>
+                                        <label><input type="checkbox" name="tipoOrgao2" value="Estadual" data-copy-from="tipoOrgao" /> Estadual</label>
+                                        <label><input type="checkbox" name="tipoOrgao2" value="Municipal" data-copy-from="tipoOrgao" /> Municipal</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </section>
 
             <footer class="footer">
@@ -368,7 +575,7 @@
             </footer>
         </div>
 
-        <!-- CONTAINER 2 -->
+        <!-- CONTAINER 2 (FORMULÁRIO 1)-->
         <div class="container form-container" id="container2" hidden>
             <div class="top-actions-bar">
                 <button type="button" class="btn btn-secondary go-home-btn" data-home="true">⮌ Voltar à tela
@@ -376,7 +583,7 @@
             </div>
 
             <header class="header">
-                <img class="header-image" src="img/capa-2.png" alt="Imagem horizontal" />
+                <img class="header-image" src="img/capa-oralblue-empresarial.png" alt="Imagem horizontal" />
 
                 <div class="mini-cards">
                     <div class="mini-card">
@@ -569,6 +776,142 @@
             </section>
             -->
 
+            <section class="section repeated-form-section" id="container2Form2Section">
+                <div class="repeated-form-banner">
+                    <img src="img/capa-maisblue-empresarial.png" alt="Imagem horizontal do segundo formulário empresarial" />
+                </div>
+
+                <h1>Dados da Contratante</h1>
+                <form class="form-grid form-copy-target" id="contratanteForm2" data-copy-group="container2" novalidate>
+                    <div class="form-group span-2">
+                        <label for="razaoSocial2">Razão social / Nome MEI</label>
+                        <input type="text" id="razaoSocial2" data-copy-from="razaoSocial" />
+                    </div>
+                    <div class="form-group span-2">
+                        <label for="nomeFantasia2">Nome fantasia (opcional)</label>
+                        <input type="text" id="nomeFantasia2" data-copy-from="nomeFantasia" />
+                    </div>
+                    <div class="form-group">
+                        <label for="cnpjMf2">CNPJ / MF</label>
+                        <input type="text" id="cnpjMf2" data-copy-from="cnpjMf" />
+                    </div>
+                    <div class="form-group">
+                        <label for="inscricaoEstadual2">Inscrição estadual</label>
+                        <input type="text" id="inscricaoEstadual2" data-copy-from="inscricaoEstadual" />
+                    </div>
+                    <div class="form-group">
+                        <label for="inscricaoMunicipal2">Inscrição municipal</label>
+                        <input type="text" id="inscricaoMunicipal2" data-copy-from="inscricaoMunicipal" />
+                    </div>
+                    <div class="form-group span-2">
+                        <label>Portabilidade de carência</label>
+                        <div class="radio-inline-group choice-group">
+                            <label><input type="radio" name="portabilidade2" value="nao" data-copy-from="portabilidade" /> Não</label>
+                            <label><input type="radio" name="portabilidade2" value="1" data-copy-from="portabilidade" /> 1°</label>
+                            <label><input type="radio" name="portabilidade2" value="2" data-copy-from="portabilidade" /> 2°</label>
+                        </div>
+                    </div>
+                    <div class="form-group span-2">
+                        <label for="enderecoCorrespondencia2">Endereço de correspondência</label>
+                        <input type="text" id="enderecoCorrespondencia2" data-copy-from="enderecoCorrespondencia" />
+                    </div>
+                    <div class="form-group">
+                        <label for="cepContratante2">CEP</label>
+                        <input type="text" id="cepContratante2" maxlength="9" data-copy-from="cepContratante" />
+                    </div>
+                    <div class="form-group">
+                        <label for="cidadeContratante2">Cidade</label>
+                        <input type="text" id="cidadeContratante2" data-copy-from="cidadeContratante" />
+                    </div>
+                    <div class="form-group">
+                        <label for="estadoContratante2">Estado</label>
+                        <input type="text" id="estadoContratante2" data-copy-from="estadoContratante" />
+                    </div>
+                    <div class="form-group span-2">
+                        <label for="complementoContratante2">Complemento</label>
+                        <input type="text" id="complementoContratante2" data-copy-from="complementoContratante" />
+                    </div>
+                    <div class="form-group span-2">
+                        <label for="enderecoFaturamento2">Endereço de faturamento</label>
+                        <input type="text" id="enderecoFaturamento2" data-copy-from="enderecoFaturamento" />
+                    </div>
+                    <div class="form-group">
+                        <label for="telefoneContratante2">Telefone</label>
+                        <input type="text" id="telefoneContratante2" data-copy-from="telefoneContratante" />
+                    </div>
+                    <div class="form-group">
+                        <label for="celularContratante2">Celular</label>
+                        <input type="text" id="celularContratante2" data-copy-from="celularContratante" />
+                    </div>
+                    <div class="form-group span-2">
+                        <label for="emailContratante2">Email</label>
+                        <input type="email" id="emailContratante2" data-copy-from="emailContratante" />
+                    </div>
+                </form>
+
+                <h1 class="section-subtitle repeated-form-title">Detalhes da Contratação - Formulário 02</h1>
+                <div class="form-grid compact-grid repeated-form-block">
+                    <div class="form-group">
+                        <label for="dataAdesao2">Data de adesão</label>
+                        <input type="date" id="dataAdesao2" data-copy-from="dataAdesao" />
+                    </div>
+                    <div class="form-group">
+                        <label for="dataPagamentoMensalidade2">Data de pagamento da mensalidade</label>
+                        <input type="date" id="dataPagamentoMensalidade2" data-copy-from="dataPagamentoMensalidade" />
+                    </div>
+                </div>
+
+                <h1 class="section-subtitle repeated-form-title">Contributariedade e Contratação - Formulário 02</h1>
+                <div class="double-form-section repeated-form-block">
+                    <div class="box-form-card">
+                        <h4>Contributariedade</h4>
+                        <div class="split-choice-layout">
+                            <div class="choice-field full-width">
+                                <label>Escolha uma opção</label>
+                                <div class="radio-inline-group choice-group">
+                                    <label><input type="radio" name="contributariedade2" value="integral" data-copy-from="contributariedade" /> Integralmente subsidiados pela contratante</label>
+                                    <label><input type="radio" name="contributariedade2" value="beneficiario" data-copy-from="contributariedade" /> Com contribuição do beneficiário</label>
+                                    <label><input type="radio" name="contributariedade2" value="misto" data-copy-from="contributariedade" /> Contratante com contribuição do beneficiário</label>
+                                </div>
+                            </div>
+                            <div class="form-grid compact-grid">
+                                <div class="form-group">
+                                    <label for="percTitularContrib2">Porcentagem do titular</label>
+                                    <input type="text" id="percTitularContrib2" data-copy-from="percTitularContrib" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="percDependenteContrib2">Porcentagem do dependente</label>
+                                    <input type="text" id="percDependenteContrib2" data-copy-from="percDependenteContrib" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-form-card">
+                        <h4>Contratação</h4>
+                        <div class="split-choice-layout">
+                            <div class="choice-field full-width">
+                                <label>Escolha uma opção</label>
+                                <div class="radio-inline-group choice-group">
+                                    <label><input type="radio" name="contratacaoTipo2" value="espontanea" data-copy-from="contratacaoTipo" /> Espontânea (de acordo com a opção do beneficiário)</label>
+                                    <label><input type="radio" name="contratacaoTipo2" value="compulsoria" data-copy-from="contratacaoTipo" /> Compulsória</label>
+                                </div>
+                            </div>
+                            <div class="form-grid compact-grid">
+                                <div class="form-group">
+                                    <label for="percTitularContratacao2">Porcentagem do titular</label>
+                                    <input type="text" id="percTitularContratacao2" data-copy-from="percTitularContratacao" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="percDependenteContratacao2">Porcentagem do dependente</label>
+                                    <input type="text" id="percDependenteContratacao2" data-copy-from="percDependenteContratacao" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section class="section">
                 <h1>Local e data do preenchimento do formulário</h1>
                 <div class="mini-date-form">
@@ -651,6 +994,16 @@
             <div class="modal-actions">
                 <button id="confirmBillingBtn" class="btn btn-green">Sim</button>
                 <button id="cancelBillingBtn" class="btn btn-red">Não</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="copyDataModal">
+        <div class="modal-card">
+            <p>gostaria de utilizar os mesmos dados já preenchidos?</p>
+            <div class="modal-actions">
+                <button id="confirmCopyDataBtn" class="btn btn-green">Sim</button>
+                <button id="cancelCopyDataBtn" class="btn btn-red">Não</button>
             </div>
         </div>
     </div>

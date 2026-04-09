@@ -27,6 +27,26 @@ const cidadeContratante = document.getElementById('cidadeContratante');
 const estadoContratante = document.getElementById('estadoContratante');
 const complementoContratante = document.getElementById('complementoContratante');
 
+function bindPress(element, handler) {
+  if (!element || typeof handler !== 'function') return;
+
+  let touchTriggered = false;
+
+  element.addEventListener('click', (event) => {
+    if (touchTriggered) {
+      touchTriggered = false;
+      return;
+    }
+    handler(event);
+  });
+
+  element.addEventListener('touchend', (event) => {
+    touchTriggered = true;
+    event.preventDefault();
+    handler(event);
+  }, { passive: false });
+}
+
 function closeBillingModal() {
   App.setModalState(billingModal, false);
 }
@@ -41,17 +61,28 @@ function resetNavigationState() {
   closeBillingModal();
 }
 
+function setContainerState(section, isActive) {
+  if (!section) return;
+  section.hidden = !isActive;
+  section.style.display = isActive ? '' : 'none';
+  section.classList.toggle('is-active', isActive);
+  section.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+}
+
 function showOnly(target) {
   [initialContainer, container1, container2].forEach((section) => {
-    if (!section) return;
-    section.hidden = section !== target;
+    setContainerState(section, section === target);
   });
 
   requestAnimationFrame(() => {
     App.refreshSignaturePads();
   });
 
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  try {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (error) {
+    window.scrollTo(0, 0);
+  }
 }
 
 function goTo(target) {
@@ -60,25 +91,25 @@ function goTo(target) {
 }
 
 if (openExistingContainerBtn) {
-  openExistingContainerBtn.addEventListener('click', () => {
-    showOnly(container1);
+  bindPress(openExistingContainerBtn, () => {
+    goTo(container1);
   });
 }
 
 if (openContainer2Btn) {
-  openContainer2Btn.addEventListener('click', () => {
-    showOnly(container2);
+  bindPress(openContainer2Btn, () => {
+    goTo(container2);
   });
 }
 
 homeButtons.forEach((button) => {
-  button.addEventListener('click', () => {
+  bindPress(button, () => {
     goTo(initialContainer);
   });
 });
 
 switchButtons.forEach((button) => {
-  button.addEventListener('click', () => {
+  bindPress(button, () => {
     const current = button.dataset.current;
 
     if (current === 'container1') {
@@ -93,13 +124,13 @@ switchButtons.forEach((button) => {
 });
 
 if (switchToContainer2) {
-  switchToContainer2.addEventListener('click', () => {
+  bindPress(switchToContainer2, () => {
     goTo(container2);
   });
 }
 
 if (switchToContainer1) {
-  switchToContainer1.addEventListener('click', () => {
+  bindPress(switchToContainer1, () => {
     goTo(container1);
   });
 }
@@ -156,7 +187,9 @@ if (cepContratante2) {
   });
 }
 
-App.setupPlusBlueToggle({ groupKey: 'container2', yesId: 'maisBlueContainer2Sim', sectionId: 'container2Form2Section' });
+App.setupPlusBlueToggle({ groupKey: 'container2', yesId: 'maisBlueContainer2Sim', noId: 'maisBlueContainer2Nao', sectionId: 'container2Form2Section' });
+
+showOnly(initialContainer);
 
 if (enderecoFaturamento) {
   enderecoFaturamento.addEventListener('focus', () => {

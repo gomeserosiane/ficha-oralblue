@@ -26,7 +26,7 @@ const App = (() => {
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => {
       toast.className = 'toast';
-    }, 3500);
+    }, 3000);
   }
 
   function setModalState(modal, isActive) {
@@ -649,14 +649,25 @@ const App = (() => {
     setModalState(copyDataModal, true);
   }
 
+  function clearPlusBluePrompt(groupKey) {
+    const groupState = alertState[groupKey];
+    if (!groupState?.plusBluePromptTimeout) return;
+    clearTimeout(groupState.plusBluePromptTimeout);
+    groupState.plusBluePromptTimeout = null;
+  }
+
+  function setElementVisibility(element, shouldShow) {
+    if (!element) return;
+    element.hidden = !shouldShow;
+    element.style.display = shouldShow ? '' : 'none';
+    element.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+  }
+
   function schedulePlusBluePrompt(groupKey) {
     const groupState = alertState[groupKey];
     if (!groupState) return;
 
-    if (groupState.plusBluePromptTimeout) {
-      clearTimeout(groupState.plusBluePromptTimeout);
-      groupState.plusBluePromptTimeout = null;
-    }
+    clearPlusBluePrompt(groupKey);
 
     if (hasShownAlert(groupKey, 'copyPromptClosed')) return;
     if (!sourceGroupHasData(groupKey)) return;
@@ -666,19 +677,33 @@ const App = (() => {
       if (hasShownAlert(groupKey, 'copyPromptClosed')) return;
       if (!sourceGroupHasData(groupKey)) return;
       openCopyPrompt(groupKey);
-    }, 3000);
+    }, 1000);
   }
 
-  function setupPlusBlueToggle({ groupKey, yesId, sectionId }) {
+  function setupPlusBlueToggle({ groupKey, yesId, noId, sectionId }) {
     const yesInput = document.getElementById(yesId);
+    const noInput = document.getElementById(noId);
     const section = document.getElementById(sectionId);
     if (!yesInput || !section) return;
 
+    setElementVisibility(section, Boolean(yesInput.checked));
+
     yesInput.addEventListener('change', () => {
       if (!yesInput.checked) return;
-      section.hidden = false;
+      setElementVisibility(section, true);
       schedulePlusBluePrompt(groupKey);
+      requestAnimationFrame(() => {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
     });
+
+    if (noInput) {
+      noInput.addEventListener('change', () => {
+        if (!noInput.checked) return;
+        clearPlusBluePrompt(groupKey);
+        setElementVisibility(section, false);
+      });
+    }
   }
 
 
@@ -744,7 +769,7 @@ const App = (() => {
     });
   }
 
-  setupPlusBlueToggle({ groupKey: 'container1', yesId: 'maisBlueContainer1Sim', sectionId: 'container1Form2Section' });
+  setupPlusBlueToggle({ groupKey: 'container1', yesId: 'maisBlueContainer1Sim', noId: 'maisBlueContainer1Nao', sectionId: 'container1Form2Section' });
 
   function getActivePaymentPanel() {
     return paymentController1.getActivePanel();

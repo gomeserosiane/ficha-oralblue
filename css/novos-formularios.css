@@ -108,3 +108,73 @@
 .btn-warning:hover {
     background: #eab308;
 }
+
+.plus-blue-section {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.plus-blue-card {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 24px 22px;
+    background: #04abbe;
+    color: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 14px 32px rgba(4, 171, 190, 0.22);
+    text-align: center;
+}
+
+.plus-blue-card h3 {
+    color: #ffffff;
+    font-size: 1.5rem;
+    margin-bottom: 14px;
+}
+
+.plus-blue-choice-group {
+    justify-content: center;
+}
+
+.plus-blue-choice-group label {
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    color: #ffffff;
+}
+
+.plus-blue-choice-group label:has(input:checked) {
+    background: #ffffff;
+    color: #037d8b;
+    border-color: #ffffff;
+}
+
+.container.is-active {
+    display: block;
+}
+
+.container[hidden] {
+    display: none !important;
+}
+
+.plan-card-horizontal .btn,
+.go-home-btn,
+.btn-alternar-formulario {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 768px) {
+    .plus-blue-card {
+        padding: 20px 16px;
+        border-radius: 16px;
+    }
+
+    .plus-blue-choice-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .plus-blue-choice-group label {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}

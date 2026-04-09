@@ -423,8 +423,61 @@ const App = (() => {
     return { canvas, box, clear, isEmpty, resize: () => resizeCanvas(true) };
   }
 
+
+  function setupInteractiveFields(scope = document) {
+    if (!scope || typeof scope.querySelectorAll !== 'function') return;
+
+    const textSelectors = 'input:not([type="radio"]):not([type="checkbox"]):not([type="button"]):not([type="submit"]):not([type="reset"]), select, textarea';
+    scope.querySelectorAll(textSelectors).forEach((field) => {
+      if (field.dataset.interactiveBound === 'true') return;
+      field.dataset.interactiveBound = 'true';
+      field.setAttribute('autocomplete', field.getAttribute('autocomplete') || 'off');
+
+      const focusField = () => {
+        window.requestAnimationFrame(() => {
+          try { field.focus({ preventScroll: true }); } catch (error) { field.focus(); }
+        });
+      };
+
+      field.addEventListener('pointerdown', focusField);
+      field.addEventListener('touchstart', focusField, { passive: true });
+      field.addEventListener('click', focusField);
+    });
+
+    scope.querySelectorAll('label').forEach((label) => {
+      if (label.dataset.interactiveBound === 'true') return;
+      label.dataset.interactiveBound = 'true';
+
+      const activate = (event) => {
+        const input = label.querySelector('input[type="radio"], input[type="checkbox"]');
+        if (input && !input.disabled) {
+          if (event.target === input) return;
+          input.click();
+          return;
+        }
+
+        const forId = label.getAttribute('for');
+        if (!forId) return;
+        const target = document.getElementById(forId);
+        if (!target || target.disabled) return;
+
+        if (target.matches('input[type="radio"], input[type="checkbox"]')) {
+          target.click();
+          return;
+        }
+
+        try { target.focus({ preventScroll: true }); } catch (error) { target.focus(); }
+      };
+
+      label.addEventListener('click', activate);
+      label.addEventListener('touchend', activate, { passive: true });
+    });
+  }
+
   const signaturePad1 = setupSignature('signatureCanvas1', 'signatureBox1');
   const signaturePad2 = setupSignature('signatureCanvas2', 'signatureBox2');
+
+  setupInteractiveFields(document);
 
   function refreshSignaturePads() {
     if (signaturePad1) signaturePad1.resize();
@@ -568,6 +621,7 @@ const App = (() => {
       container.appendChild(fragment);
       const appendedCard = container.lastElementChild;
       enhanceDependentCard(appendedCard);
+      setupInteractiveFields(appendedCard);
       if (prefill) {
         Object.entries(prefill).forEach(([selector, value]) => {
           const field = appendedCard.querySelector(selector);
@@ -928,6 +982,7 @@ const App = (() => {
     setupPlusBlueToggle,
     closeCopyDataModal,
     bindResponsivePress,
+    setupInteractiveFields,
     signaturePad1,
     signaturePad2,
     refreshSignaturePads

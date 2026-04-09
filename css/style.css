@@ -570,3 +570,57 @@ input[type="checkbox"] {
     transform: translateY(0);
   }
 }
+
+.modal-overlay:not(.active) {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+.section,
+.form-group,
+.choice-group,
+.radio-inline-group,
+.checkbox-inline-group,
+.whatsapp-box,
+.payment-buttons,
+.payment-card,
+.plus-blue-card,
+.plus-blue-choice-group,
+.dependent-card,
+.dependent-header,
+.final-actions-row,
+.signature-card {
+  position: relative;
+}
+
+label,
+input,
+select,
+textarea,
+button {
+  position: relative;
+  z-index: 2;
+}
+
+input,
+select,
+textarea,
+label,
+.choice-group label,
+.radio-inline-group label,
+.checkbox-inline-group label,
+.whatsapp-box label {
+  pointer-events: auto;
+}
+
+input,
+select,
+textarea {
+  touch-action: manipulation;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+label {
+  -webkit-tap-highlight-color: transparent;
+}

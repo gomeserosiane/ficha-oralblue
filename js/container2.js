@@ -192,6 +192,7 @@ if (cepContratante2) {
 }
 
 App.setupPlusBlueToggle({ groupKey: 'container2', yesId: 'maisBlueContainer2Sim', noId: 'maisBlueContainer2Nao', sectionId: 'container2Form2Section' });
+App.setupInteractiveFields(document);
 
 showOnly(initialContainer);
 

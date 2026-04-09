@@ -192,3 +192,25 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 768px) {
+  .form-group,
+  .choice-group,
+  .radio-inline-group,
+  .checkbox-inline-group,
+  .whatsapp-box {
+    position: relative;
+    z-index: 1;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea,
+  .choice-group label,
+  .radio-inline-group label,
+  .checkbox-inline-group label,
+  .whatsapp-box label {
+    position: relative;
+    z-index: 3;
+  }
+}

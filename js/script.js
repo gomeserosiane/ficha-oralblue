@@ -19,6 +19,12 @@ const App = (() => {
     address.city || address.town || address.village || address.municipality || ''
   );
 
+  /**
+
+   * Exibe uma notificação temporária na tela para informar sucesso, erro ou aviso ao usuário.
+
+   */
+
   function showToast(message, type = 'error') {
     if (!toast) return;
     toast.textContent = message;
@@ -29,11 +35,23 @@ const App = (() => {
     }, 3000);
   }
 
+  /**
+
+   * Abre ou fecha um modal controlando classes visuais e atributos de acessibilidade.
+
+   */
+
   function setModalState(modal, isActive) {
     if (!modal) return;
     modal.classList.toggle('active', isActive);
     document.body.classList.toggle('modal-open', isActive);
   }
+
+  /**
+
+   * Padroniza interações de clique e toque para evitar eventos duplicados em mobile.
+
+   */
 
   function bindResponsivePress(element, handler) {
     if (!element || typeof handler !== 'function') return;
@@ -65,19 +83,43 @@ const App = (() => {
     });
   }
 
+  /**
+
+   * Abre o modal que ajuda a preencher os campos de local e data automaticamente.
+
+   */
+
   function openLocationModal(targetKey) {
     activeDateTarget = targetKey;
     setModalState(locationModal, true);
   }
+
+  /**
+
+   * Fecha o modal de local e data e limpa o alvo ativo do preenchimento.
+
+   */
 
   function closeLocationModal() {
     activeDateTarget = null;
     setModalState(locationModal, false);
   }
 
+  /**
+
+   * Fecha o modal usado para confirmar a cópia de dados entre formulários.
+
+   */
+
   function closeCopyDataModal() {
     setModalState(copyDataModal, false);
   }
+
+  /**
+
+   * Fecha todos os modais conhecidos da aplicação de uma só vez.
+
+   */
 
   function closeAllKnownModals() {
     closeLocationModal();
@@ -85,6 +127,12 @@ const App = (() => {
     const billingModal = document.getElementById('billingModal');
     if (billingModal) setModalState(billingModal, false);
   }
+
+  /**
+
+   * Limpa os alertas já exibidos para um grupo específico ou para toda a aplicação.
+
+   */
 
   function resetAlerts(scope = 'all') {
     if (scope === 'container1') {
@@ -102,14 +150,32 @@ const App = (() => {
     };
   }
 
+  /**
+
+   * Verifica se um alerta específico já foi mostrado para evitar repetição.
+
+   */
+
   function hasShownAlert(containerKey, alertKey) {
     return Boolean(alertState?.[containerKey]?.[alertKey]);
   }
+
+  /**
+
+   * Marca um alerta como já exibido dentro do controle interno da aplicação.
+
+   */
 
   function markAlertShown(containerKey, alertKey) {
     if (!alertState[containerKey]) return;
     alertState[containerKey][alertKey] = true;
   }
+
+  /**
+
+   * Obtém data atual e tenta inferir a localidade do usuário para auto preenchimento.
+
+   */
 
   async function getCurrentPlaceAndDate() {
     const now = new Date();
@@ -149,6 +215,12 @@ const App = (() => {
     }
   }
 
+  /**
+
+   * Preenche os campos de cidade, UF e data no formulário alvo selecionado.
+
+   */
+
   function fillDateFields(targetKey, payload) {
     const map = {
       container1: ['cidadeAtual', 'ufAtual', 'diaAtual', 'mesAtual', 'anoAtual'],
@@ -169,19 +241,43 @@ const App = (() => {
     if (ano) ano.value = payload.ano || '';
   }
 
+  /**
+
+   * Remove os destaques visuais de erro dos campos marcados como inválidos.
+
+   */
+
   function clearInvalidMarks(scope) {
     if (!scope) return;
     scope.querySelectorAll('.invalid').forEach((el) => el.classList.remove('invalid'));
   }
+
+  /**
+
+   * Marca visualmente um campo ou bloco como inválido para orientar o usuário.
+
+   */
 
   function markInvalid(element) {
     if (!element) return;
     element.classList.add('invalid');
   }
 
+  /**
+
+   * Valida se um valor possui conteúdo útil depois de remover espaços extras.
+
+   */
+
   function isFilled(value) {
     return String(value || '').trim() !== '';
   }
+
+  /**
+
+   * Percorre uma lista de campos obrigatórios e marca os que estiverem vazios.
+
+   */
 
   function validateInputs(ids = []) {
     const empty = [];
@@ -196,6 +292,12 @@ const App = (() => {
     return empty;
   }
 
+  /**
+
+   * Valida se um grupo de radio possui uma opção selecionada.
+
+   */
+
   function validateRadioGroup(name, wrapperSelector = null, scope = document) {
     const radios = Array.from(scope.querySelectorAll(`input[name="${name}"]`));
     if (!radios.length) return null;
@@ -208,6 +310,12 @@ const App = (() => {
     return wrapper;
   }
 
+  /**
+
+   * Valida se pelo menos um checkbox do grupo foi marcado.
+
+   */
+
   function validateCheckboxGroup(name, wrapperSelector = null, scope = document) {
     const checks = Array.from(scope.querySelectorAll(`input[name="${name}"]`));
     if (!checks.length) return null;
@@ -219,6 +327,12 @@ const App = (() => {
     markInvalid(wrapper);
     return wrapper;
   }
+
+  /**
+
+   * Gera uma imagem do container informado usando html2canvas e dispara o download.
+
+   */
 
   async function captureContainer(element, filename) {
     document.body.classList.add('screenshot-mode');
@@ -240,12 +354,24 @@ const App = (() => {
     }
   }
 
+  /**
+
+   * Aplica uma máscara de formatação dinâmica enquanto o usuário digita.
+
+   */
+
   function addMask(input, formatter) {
     if (!input || typeof formatter !== 'function') return;
     input.addEventListener('input', (event) => {
       event.target.value = formatter(event.target.value);
     });
   }
+
+  /**
+
+   * Remove tudo que não for número de uma string para facilitar máscaras e validações.
+
+   */
 
   function numeric(value) {
     return String(value || '').replace(/\D/g, '');
@@ -284,12 +410,24 @@ const App = (() => {
     }
   };
 
+  /**
+
+   * Consulta a API do ViaCEP e devolve os dados do endereço do CEP informado.
+
+   */
+
   async function fetchViaCep(cep) {
     const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
     const data = await response.json();
     if (data.erro) throw new Error('CEP não encontrado');
     return data;
   }
+
+  /**
+
+   * Inicializa a área de assinatura digital e devolve seus controles principais.
+
+   */
 
   function setupSignature(canvasId, boxId) {
     const canvas = document.getElementById(canvasId);
@@ -302,10 +440,22 @@ const App = (() => {
     let lastPoint = null;
     let resizeObserver = null;
 
+    /**
+
+     * Calcula a altura visual do canvas de assinatura com fallback seguro.
+
+     */
+
     function getCssHeight() {
       const height = parseFloat(getComputedStyle(canvas).height);
       return Number.isFinite(height) && height > 0 ? height : 180;
     }
+
+    /**
+
+     * Redesenha a assinatura anterior no canvas após um redimensionamento.
+
+     */
 
     function redrawFromDataUrl(dataUrl, width, height) {
       const img = new Image();
@@ -315,6 +465,12 @@ const App = (() => {
       };
       img.src = dataUrl;
     }
+
+    /**
+
+     * Ajusta o tamanho real do canvas de assinatura preservando o desenho existente.
+
+     */
 
     function resizeCanvas(force = false) {
       const rect = box.getBoundingClientRect();
@@ -343,6 +499,12 @@ const App = (() => {
       }
     }
 
+    /**
+
+     * Converte a posição do mouse ou toque para a coordenada correta dentro do canvas.
+
+     */
+
     function getPosition(event) {
       const rect = canvas.getBoundingClientRect();
       if (event.touches && event.touches.length > 0) {
@@ -357,6 +519,12 @@ const App = (() => {
       };
     }
 
+    /**
+
+     * Inicia o traço da assinatura quando o usuário começa a desenhar.
+
+     */
+
     function startDrawing(event) {
       event.preventDefault();
       if (!canvas.width || !canvas.height) resizeCanvas(true);
@@ -370,6 +538,12 @@ const App = (() => {
       box.classList.remove('invalid');
     }
 
+    /**
+
+     * Continua desenhando a assinatura enquanto o ponteiro se move.
+
+     */
+
     function draw(event) {
       if (!drawing) return;
       event.preventDefault();
@@ -382,6 +556,12 @@ const App = (() => {
       hasSignature = true;
     }
 
+    /**
+
+     * Encerra o desenho da assinatura e finaliza o traço atual.
+
+     */
+
     function stopDrawing(event) {
       if (event) event.preventDefault();
       drawing = false;
@@ -389,12 +569,24 @@ const App = (() => {
       ctx.closePath();
     }
 
+    /**
+
+     * Limpa completamente a assinatura desenhada no canvas.
+
+     */
+
     function clear() {
       const rect = canvas.getBoundingClientRect();
       ctx.clearRect(0, 0, rect.width || canvas.width, rect.height || canvas.height);
       hasSignature = false;
       box.classList.remove('invalid');
     }
+
+    /**
+
+     * Informa se a área de assinatura ainda está vazia.
+
+     */
 
     function isEmpty() {
       return !hasSignature;
@@ -424,24 +616,81 @@ const App = (() => {
   }
 
 
+  /**
+
+
+   * Melhora a usabilidade dos campos e labels em desktop e dispositivos touch.
+
+
+   */
+
+
   function setupInteractiveFields(scope = document) {
     if (!scope || typeof scope.querySelectorAll !== 'function') return;
 
+    const prefersTouch = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
     const textSelectors = 'input:not([type="radio"]):not([type="checkbox"]):not([type="button"]):not([type="submit"]):not([type="reset"]), select, textarea';
+    const choiceSelectors = 'input[type="radio"], input[type="checkbox"]';
+
+    const focusField = (field, preserveScroll = false) => {
+      if (!field || field.disabled || typeof field.focus !== 'function') return;
+      if (preserveScroll) {
+        try { field.focus({ preventScroll: true }); return; } catch (error) {}
+      }
+      field.focus();
+    };
+
+    const activateChoice = (field) => {
+      if (!field || field.disabled) return;
+
+      if (field.type === 'radio') {
+        if (!field.checked) field.checked = true;
+      } else if (field.type === 'checkbox') {
+        field.checked = !field.checked;
+      }
+
+      field.dispatchEvent(new Event('input', { bubbles: true }));
+      field.dispatchEvent(new Event('change', { bubbles: true }));
+    };
+
     scope.querySelectorAll(textSelectors).forEach((field) => {
       if (field.dataset.interactiveBound === 'true') return;
       field.dataset.interactiveBound = 'true';
       field.setAttribute('autocomplete', field.getAttribute('autocomplete') || 'off');
 
-      const focusField = () => {
+      if (prefersTouch) {
+        const focusOnTouch = () => focusField(field, false);
+        field.addEventListener('touchend', focusOnTouch, { passive: true });
+        field.addEventListener('click', focusOnTouch);
+        return;
+      }
+
+      const focusDesktopField = () => {
         window.requestAnimationFrame(() => {
-          try { field.focus({ preventScroll: true }); } catch (error) { field.focus(); }
+          focusField(field, true);
         });
       };
 
-      field.addEventListener('pointerdown', focusField);
-      field.addEventListener('touchstart', focusField, { passive: true });
-      field.addEventListener('click', focusField);
+      field.addEventListener('pointerdown', focusDesktopField);
+      field.addEventListener('click', focusDesktopField);
+    });
+
+    scope.querySelectorAll(choiceSelectors).forEach((field) => {
+      if (field.dataset.choiceInteractiveBound === 'true') return;
+      field.dataset.choiceInteractiveBound = 'true';
+
+      if (!prefersTouch) return;
+
+      field.addEventListener('touchend', (event) => {
+        if (event.cancelable) event.preventDefault();
+        activateChoice(field);
+      }, { passive: false });
+
+      field.addEventListener('click', (event) => {
+        if (event.detail === 0) return;
+        event.preventDefault();
+        activateChoice(field);
+      });
     });
 
     scope.querySelectorAll('label').forEach((label) => {
@@ -449,28 +698,37 @@ const App = (() => {
       label.dataset.interactiveBound = 'true';
 
       const activate = (event) => {
-        const input = label.querySelector('input[type="radio"], input[type="checkbox"]');
-        if (input && !input.disabled) {
-          if (event.target === input) return;
-          input.click();
-          return;
-        }
+        if (prefersTouch && event.target && event.target.closest && event.target.closest(choiceSelectors)) return;
 
+        const input = label.querySelector('input[type="radio"], input[type="checkbox"]');
         const forId = label.getAttribute('for');
-        if (!forId) return;
-        const target = document.getElementById(forId);
+        const target = input || (forId ? document.getElementById(forId) : null);
         if (!target || target.disabled) return;
 
         if (target.matches('input[type="radio"], input[type="checkbox"]')) {
+          if (event.target === target && !prefersTouch) return;
+          if (prefersTouch) {
+            if (event.cancelable) event.preventDefault();
+            activateChoice(target);
+            return;
+          }
           target.click();
           return;
         }
 
-        try { target.focus({ preventScroll: true }); } catch (error) { target.focus(); }
+        if (prefersTouch) {
+          focusField(target, false);
+          return;
+        }
+
+        focusField(target, true);
       };
 
+      if (prefersTouch) {
+        label.addEventListener('touchend', activate, { passive: false });
+      }
+
       label.addEventListener('click', activate);
-      label.addEventListener('touchend', activate, { passive: true });
     });
   }
 
@@ -478,6 +736,12 @@ const App = (() => {
   const signaturePad2 = setupSignature('signatureCanvas2', 'signatureBox2');
 
   setupInteractiveFields(document);
+
+  /**
+
+   * Redimensiona novamente as áreas de assinatura quando necessário.
+
+   */
 
   function refreshSignaturePads() {
     if (signaturePad1) signaturePad1.resize();
@@ -504,6 +768,12 @@ const App = (() => {
   if (cancelLocationBtn) {
     bindResponsivePress(cancelLocationBtn, closeLocationModal);
   }
+
+  /**
+
+   * Verifica se o formulário base já possui dados para reaproveitar no segundo bloco.
+
+   */
 
   function sourceGroupHasData(groupKey) {
     const targetForm = document.querySelector(`.form-copy-target[data-copy-group="${groupKey}"]`);
@@ -546,6 +816,12 @@ const App = (() => {
     return false;
   }
 
+  /**
+
+   * Ativa visualmente a forma de pagamento selecionada e exibe seu painel.
+
+   */
+
   function setPaymentSelection(scopeElement, targetId = null) {
     if (!scopeElement) return;
     const buttons = Array.from(scopeElement.querySelectorAll('.payment-toggle'));
@@ -559,6 +835,12 @@ const App = (() => {
     if (button) button.classList.add('active');
     if (card) card.classList.add('active');
   }
+
+  /**
+
+   * Configura os botões de seleção e o controle dos painéis de pagamento.
+
+   */
 
   function setupPaymentToggle(scopeSelector) {
     const scopeElement = document.querySelector(scopeSelector);
@@ -594,6 +876,12 @@ const App = (() => {
     ['.dep-celular', formatters.phone]
   ];
 
+  /**
+
+   * Adiciona comportamentos, máscaras e ações a um card de dependente criado dinamicamente.
+
+   */
+
   function enhanceDependentCard(card) {
     if (!card) return;
     dependentFieldBindings.forEach(([selector, formatter]) => {
@@ -601,9 +889,21 @@ const App = (() => {
     });
   }
 
+  /**
+
+   * Gerencia a área que cria, remove e renomeia dependentes do formulário.
+
+   */
+
   function setupDependentSection({ buttonId, containerId }) {
     const button = document.getElementById(buttonId);
     const container = document.getElementById(containerId);
+
+    /**
+
+     * Atualiza a numeração dos cards de dependentes exibidos na tela.
+
+     */
 
     function updateTitles() {
       if (!container) return;
@@ -612,6 +912,12 @@ const App = (() => {
         if (title) title.textContent = `Dependente ${String(index + 1).padStart(2, '0')}`;
       });
     }
+
+    /**
+
+     * Cria um novo card de dependente a partir do template HTML.
+
+     */
 
     function addDependent(prefill = null) {
       if (!dependentTemplate || !container) return null;
@@ -670,6 +976,12 @@ const App = (() => {
     };
   }
 
+  /**
+
+   * Captura os dados atuais dos dependentes para permitir cópia entre formulários.
+
+   */
+
   function getDependentSnapshot(card) {
     return {
       '.dep-nome': card.querySelector('.dep-nome')?.value || '',
@@ -684,6 +996,12 @@ const App = (() => {
     };
   }
 
+  /**
+
+   * Replica dependentes do formulário principal para o formulário Mais Blue.
+
+   */
+
   function syncContainer1Dependents() {
     const sourceManager = dependentManagers.primary;
     const targetManager = dependentManagers.secondary;
@@ -696,6 +1014,12 @@ const App = (() => {
     targetManager.updateTitles();
   }
 
+  /**
+
+   * Replica a forma de pagamento e seus dados para o segundo formulário.
+
+   */
+
   function syncContainer1Payment() {
     const activeSourcePanel = paymentController1.getActivePanel();
     if (!activeSourcePanel) {
@@ -704,6 +1028,12 @@ const App = (() => {
     }
     paymentController2.setActiveById(`${activeSourcePanel.id}2`);
   }
+
+  /**
+
+   * Copia dados de um grupo de formulário para outro com base nos atributos data-copy-from.
+
+   */
 
   function copyFormGroup(groupKey) {
     const targetForm = document.querySelector(`.form-copy-target[data-copy-group="${groupKey}"]`);
@@ -739,11 +1069,23 @@ const App = (() => {
     return true;
   }
 
+  /**
+
+   * Abre o modal perguntando se o usuário quer reaproveitar os dados já preenchidos.
+
+   */
+
   function openCopyPrompt(groupKey) {
     if (!copyDataModal) return;
     copyDataModal.dataset.group = groupKey;
     setModalState(copyDataModal, true);
   }
+
+  /**
+
+   * Reseta o estado do aviso de cópia ligado ao fluxo Mais Blue.
+
+   */
 
   function clearPlusBluePrompt(groupKey) {
     const groupState = alertState[groupKey];
@@ -752,12 +1094,24 @@ const App = (() => {
     groupState.plusBluePromptTimeout = null;
   }
 
+  /**
+
+   * Mostra ou oculta um elemento atualizando display, hidden e aria-hidden.
+
+   */
+
   function setElementVisibility(element, shouldShow) {
     if (!element) return;
     element.hidden = !shouldShow;
     element.style.display = shouldShow ? '' : 'none';
     element.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
   }
+
+  /**
+
+   * Agenda a abertura do prompt de cópia quando o fluxo Mais Blue for ativado.
+
+   */
 
   function schedulePlusBluePrompt(groupKey) {
     const groupState = alertState[groupKey];
@@ -775,6 +1129,12 @@ const App = (() => {
       openCopyPrompt(groupKey);
     }, 1000);
   }
+
+  /**
+
+   * Controla a exibição do segundo formulário quando o usuário escolhe aderir ao Mais Blue.
+
+   */
 
   function setupPlusBlueToggle({ groupKey, yesId, noId, sectionId }) {
     const yesInput = document.getElementById(yesId);
@@ -807,7 +1167,7 @@ const App = (() => {
   const enderecoInput = document.getElementById('enderecoTitular');
   const bairroInput = document.getElementById('bairroTitular');
   const complementoInput = document.getElementById('complementoTitular');
-  const submitFormBtns = Array.from(document.querySelectorAll('#submitFormBtn, #submitFormBtn1, .submit-form-btn'));
+  const submitFormBtns = Array.from(document.querySelectorAll('#submitFormBtn1, .submit-form-btn'));
   const container1 = document.getElementById('container1');
   const dependentManagers = {
     primary: setupDependentSection({ buttonId: 'addDependentBtn', containerId: 'dependentesContainer' }),
@@ -867,9 +1227,31 @@ const App = (() => {
 
   setupPlusBlueToggle({ groupKey: 'container1', yesId: 'maisBlueContainer1Sim', noId: 'maisBlueContainer1Nao', sectionId: 'container1Form2Section' });
 
+  /**
+
+   * Retorna o painel de pagamento ativo do formulário individual principal.
+
+   */
+
   function getActivePaymentPanel() {
     return paymentController1.getActivePanel();
   }
+
+  /**
+
+   * Retorna o painel de pagamento ativo do formulário individual Mais Blue.
+
+   */
+
+  function getActivePaymentPanel2() {
+    return paymentController2.getActivePanel();
+  }
+
+  /**
+
+   * Valida o formulário individual completo, incluindo o bloco Mais Blue quando ele estiver visível.
+
+   */
 
   function validateContainer1() {
     if (!container1) return false;
@@ -906,6 +1288,40 @@ const App = (() => {
         validateCheckboxGroup('tipoOrgao', '#folhaCard .checkbox-inline-group', container1);
       } else if (hasFolhaEscolha) {
         validateCheckboxGroup('folhaEscolha', '#folhaCard .checkbox-inline-group', container1);
+      }
+    }
+
+    const plusBlueSection = document.getElementById('container1Form2Section');
+    const isPlusBlueVisible = plusBlueSection && !plusBlueSection.hidden;
+
+    if (isPlusBlueVisible) {
+      const requiredIds2 = [
+        'nomeTitular2', 'nomeMaeTitular2', 'dataNascimentoTitular2', 'profissaoTitular2', 'localTrabalhoTitular2',
+        'matriculaTitular2', 'rgTitular2', 'orgaoEmissorTitular2', 'cpfTitular2', 'cnsTitular2', 'telefoneTitular2',
+        'celularTitular2', 'emailTitular2', 'cepTitular2', 'enderecoTitular2', 'numeroTitular2', 'bairroTitular2',
+        'complementoTitular2'
+      ];
+      validateInputs(requiredIds2);
+      validateRadioGroup('whatsapp2', null, container1);
+
+      const activePayment2 = getActivePaymentPanel2();
+      if (!activePayment2) {
+        showToast('Selecione uma forma de pagamento do plano Mais Blue antes de enviar.');
+        return false;
+      }
+
+      if (activePayment2.id === 'boletoCard2') {
+        validateRadioGroup('vencimentoBoleto2', '#boletoCard2 .radio-inline-group', container1);
+      }
+      if (activePayment2.id === 'cartaoCard2') {
+        validateInputs(['nomeCartao2', 'numeroCartao2', 'validadeCartao2', 'cvvCartao2']);
+      }
+      if (activePayment2.id === 'debitoCard2') {
+        validateInputs(['nomeBanco2', 'codBanco2', 'agenciaBanco2', 'contaCorrente2']);
+      }
+      if (activePayment2.id === 'folhaCard2') {
+        validateInputs(['matriculaFolha2', 'orgaoFolha2']);
+        validateCheckboxGroup('tipoOrgao2', '#folhaCard2 .checkbox-inline-group', container1);
       }
     }
 

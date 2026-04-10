@@ -27,6 +27,12 @@ const cidadeContratante = document.getElementById('cidadeContratante');
 const estadoContratante = document.getElementById('estadoContratante');
 const complementoContratante = document.getElementById('complementoContratante');
 
+/**
+
+ * Padroniza interações de clique e toque no formulário empresarial.
+
+ */
+
 function bindPress(element, handler) {
   if (!element || typeof handler !== 'function') return;
   if (typeof App?.bindResponsivePress === 'function') {
@@ -51,19 +57,43 @@ function bindPress(element, handler) {
   }, { passive: false });
 }
 
+/**
+
+ * Fecha o modal que sugere copiar o endereço de correspondência para faturamento.
+
+ */
+
 function closeBillingModal() {
   App.setModalState(billingModal, false);
 }
 
+/**
+
+ * Abre o modal de confirmação para reaproveitar o endereço de correspondência.
+
+ */
+
 function openBillingModal() {
   App.setModalState(billingModal, true);
 }
+
+/**
+
+ * Limpa alertas e modais antes de trocar entre as telas do projeto.
+
+ */
 
 function resetNavigationState() {
   App.resetAlerts('all');
   App.closeAllKnownModals();
   closeBillingModal();
 }
+
+/**
+
+ * Ativa ou desativa visualmente um container específico da aplicação.
+
+ */
 
 function setContainerState(section, isActive) {
   if (!section) return;
@@ -72,6 +102,12 @@ function setContainerState(section, isActive) {
   section.classList.toggle('is-active', isActive);
   section.setAttribute('aria-hidden', isActive ? 'false' : 'true');
 }
+
+/**
+
+ * Exibe apenas o container desejado e oculta os demais.
+
+ */
 
 function showOnly(target) {
   [initialContainer, container1, container2].forEach((section) => {
@@ -88,6 +124,12 @@ function showOnly(target) {
     window.scrollTo(0, 0);
   }
 }
+
+/**
+
+ * Centraliza a navegação entre a home e os dois formulários principais.
+
+ */
 
 function goTo(target) {
   resetNavigationState();
@@ -233,6 +275,12 @@ document.querySelectorAll('.auto-date-trigger-2').forEach((input) => {
     }
   });
 });
+
+/**
+
+ * Valida todos os campos obrigatórios do formulário empresarial antes do envio.
+
+ */
 
 function validateContainer2() {
   if (!container2) return false;
